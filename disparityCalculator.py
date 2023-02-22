@@ -1,10 +1,5 @@
 import numpy as np
 import cv2 as cv
-from matplotlib import pyplot as plt
-import os
-from collections import OrderedDict
-import json
-from JSONParser import load_json,parse_detected_person_json
 
 def disparityCalculator(disparityMap, points):
     mask = np.zeros(disparityMap.shape[:2], np.uint8)
@@ -17,6 +12,15 @@ def disparityCalculator(disparityMap, points):
         mask = mask + 255 * points
         
     
+    contours, hierarchy = cv.findContours(mask,cv.RETR_TREE,cv.CHAIN_APPROX_SIMPLE)
+    retX = retY = 0
+    for c in contours:
+        M = cv.moments(c)
+        cX = int(M["m10"] / M["m00"])
+        retX = cX
+        cY = int(M["m01"] / M["m00"])
+        retY = cY
     
+        
     hist_mask = cv.calcHist([disparityMap],[0],mask,[256],[1,255.0])
-    return float(np.argmax(hist_mask))
+    return float(np.argmax(hist_mask)),cX,cY
