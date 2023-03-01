@@ -14,7 +14,8 @@ class Estimator:
     
     def getDistance(self,mask):
         #figureMask = k2m.keypointsToMask(self.disparityMap.shape[:2], coords)
-        gsValues, cX, cY = disparityCalculator(self.disparityMap, mask)
+        gsValues, cX, cY, lowestPoint = disparityCalculator(self.disparityMap, mask)
+        print(lowestPoint)
         
         estimatedDistance = estimateDistance(gsValues)
         
@@ -23,4 +24,4 @@ class Estimator:
         else:
             distanceFromCenter = 0.521 * estimatedDistance * 1/(imgWidth/2) * (cX - (imgWidth/2))
         
-        return estimatedDistance, distanceFromCenter
+        return distanceFromCenter,estimatedDistance

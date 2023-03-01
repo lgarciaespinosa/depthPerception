@@ -9,6 +9,8 @@ def disparityCalculator(disparityMap, inputMask):
         
     
     contours, hierarchy = cv.findContours(mask,cv.RETR_TREE,cv.CHAIN_APPROX_SIMPLE)
+    c = contours[0]
+    lowestPoint = tuple(c[c[:,:, 1].argmax()][0])
     for c in contours:
         M = cv.moments(c)
         cX = int(M["m10"] / M["m00"])
@@ -16,4 +18,4 @@ def disparityCalculator(disparityMap, inputMask):
     
         
     hist_mask = cv.calcHist([disparityMap],[0],mask,[256],[1,255.0])
-    return float(np.argmax(hist_mask)),cX,cY
+    return float(np.argmax(hist_mask)),cX,cY, lowestPoint
